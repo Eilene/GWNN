@@ -26,7 +26,7 @@ the script has been tested running under Python 2.7, with the following packages
 * --epochs                    INT           Number of Adam epochs.                      Default: 1000.
 * --early-stopping            INT           Number of early stopping epochs.            Default: 100.
 
-## Run Example
+## Run example
 The run example for Cora dataset in default parameter
 <div align=center>
  <img src="cora_run.jpeg" alt="cora_accuracy" align=center/>
