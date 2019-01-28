@@ -16,7 +16,7 @@ the script has been tested running under Python 2.7, with the following packages
 * scipy==0.19.1
 * networkx==2.0
 
-## Run the code
+## Run the Code
 * cd GraphWaveletNetwork
 * python train.py
 
@@ -26,7 +26,7 @@ the script has been tested running under Python 2.7, with the following packages
 * --epochs                    INT           Number of Adam epochs.                      Default: 1000.
 * --early-stopping            INT           Number of early stopping epochs.            Default: 100.
 
-## Run example
+## Run Example
 The run example for Cora dataset in default parameter
 <div align=center>
  <img src="cora_run.jpeg" alt="cora_accuracy" align=center/>
