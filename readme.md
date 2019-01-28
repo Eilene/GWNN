@@ -21,10 +21,10 @@ the script has been tested running under Python 2.7, with the following packages
 * python train.py
 
 ## Parameters
-* --wavelet_s                 FLOAT         wavelet scaling parameter                  Cora: 1.0, Citeseer: 0.7, Pubmed: 0.5
-* --threshold                 FLOAT         threshold parameter for wavelet            Cora: 1e-4, Citeseer: 1e-5, Pubmed: 1e-7
-* --epochs                    INT           Number of Adam epochs.                     Default is 1000.
-* --early-stopping            INT           Number of early stopping epochs.           Default is 100.
+* --wavelet_s                 FLOAT         wavelet scaling parameter.                  Default: Cora: 1.0, Citeseer: 0.7, Pubmed: 0.5
+* --threshold                 FLOAT         threshold parameter for wavelet.            Default: Cora: 1e-4, Citeseer: 1e-5, Pubmed: 1e-7
+* --epochs                    INT           Number of Adam epochs.                      Default: 1000.
+* --early-stopping            INT           Number of early stopping epochs.            Default: 100.
 
 ## Run Example
 The run example for Cora dataset in default parameter
