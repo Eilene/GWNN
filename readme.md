@@ -7,7 +7,7 @@
  <img src="wavelet_basis.jpeg" alt="Wavelet_basis" align=center/>
 </div>
 
-> We provide a TensorFlow implementation of Graph Wavelet Neural Network, which implement graph convolution via graph wavelet transform instead of Fourier transform. Different from graph Fourier transform, graph wavelets are sparse and localized in vertex domain, offering high efficiency and good interpretability for graph convolution. We evaluate our model in the task of graph-based semi-supervised classification.
+> We provide a TensorFlow implementation of Graph Wavelet Neural Network, which implements graph convolution via graph wavelet transform instead of Fourier transform. Different from graph Fourier transform, graph wavelets are sparse and localized in vertex domain, offering high efficiency and good interpretability for graph convolution. We evaluated our model in the task of graph-based semi-supervised classification.
 
 ## Requirements
 the script has been tested running under Python 2.7, with the following packages installed (along with their dependencies):

@@ -12,6 +12,13 @@ from models import GCN, MLP, GCN_WeightShare, Wavelet_Neural_Network, Spectral_C
 import os
 os.environ['CUDA_VISIBLE_DEVICES']='0'
 
+# True: using pretrained model for cora in dir:pre_trained
+# False: training a new model
+Pretrain_model_cora = True
+checkpt_old_file = 'pre_trained/model_cora.ckpt'
+# save model
+# checkpt_new_file = 'pre_trained/model_cora_new.ckpt'
+
 # Set random seed
 seed = 123
 np.random.seed(seed)
@@ -114,55 +121,65 @@ def evaluate(features, support, labels, mask, placeholders):
     outs_val = sess.run([model.outputs,model.loss, model.accuracy], feed_dict=feed_dict_val)
     return outs_val[0], outs_val[1], outs_val[2]
 
+saver = tf.train.Saver()
+
 # Init variables
 sess.run(tf.global_variables_initializer())
 
 # Train model
 cost_val = []
 best_val_acc = 0.0
-best_test_acc = 0.0
 output_test_acc = 0.0
 
-for epoch in range(FLAGS.epochs):
+if Pretrain_model_cora == False:
+    for epoch in range(FLAGS.epochs):
 
-    # Construct feed dictionary
-    feed_dict = construct_feed_dict(features, support, y_train, train_mask, placeholders)
-    feed_dict.update({placeholders['dropout']: FLAGS.dropout})
+        # Construct feed dictionary
+        feed_dict = construct_feed_dict(features, support, y_train, train_mask, placeholders)
+        feed_dict.update({placeholders['dropout']: FLAGS.dropout})
 
-    # Training step
-    outs = sess.run([model.opt_op, model.loss, model.accuracy], feed_dict=feed_dict)
+        # Training step
+        outs = sess.run([model.opt_op, model.loss, model.accuracy], feed_dict=feed_dict)
 
-    # Validation
-    val_output,cost, acc = evaluate(features, support, y_val, val_mask, placeholders)
-    cost_val.append(cost)
+        # Validation
+        val_output,cost, acc = evaluate(features, support, y_val, val_mask, placeholders)
+        cost_val.append(cost)
 
-    # Test
+        # if(best_val_acc<=acc):
+        #     saver.save(sess, checkpt_new_file)
+
+        # Test
+        test_output, test_cost, test_acc = evaluate(features, support, y_test, test_mask, placeholders)
+
+        # 记录acc 最大的时候
+        if(best_val_acc <= acc):
+            best_val_acc = acc
+            output_test_acc = test_acc
+
+        # Print results
+        print("Epoch:", '%04d' % (epoch + 1), "train_loss=", "{:.5f}".format(outs[1]),
+              "train_acc=", "{:.5f}".format(outs[2]), "val_loss=", "{:.5f}".format(cost),
+              "val_acc=", "{:.5f}".format(acc), "test_loss=", "{:.5f}".format(test_cost), "test_acc=", "{:.5f}".format(test_acc))
+
+        if epoch > FLAGS.early_stopping and cost_val[-1] > np.mean(cost_val[-(FLAGS.early_stopping+1):-1]):
+            print("Early stopping...")
+            break
+
+if(Pretrain_model_cora == True):
+    saver.restore(sess, checkpt_old_file)
     test_output, test_cost, test_acc = evaluate(features, support, y_test, test_mask, placeholders)
+    print("Load the pre-trained model in " + checkpt_old_file)
+    print("Test accuracy: ",test_acc)
+    output_test_acc = test_acc
 
-    # 记录acc 最大的时候
-    if(best_val_acc <= acc):
-        best_val_acc = acc
-        output_test_acc = test_acc
+if(Pretrain_model_cora == False):
+    print("Optimization Finished!")
 
-    if(best_test_acc <= test_acc):
-        best_test_acc = test_acc
+    print("dataset: ",FLAGS.dataset," model: ",FLAGS.model,"order: ",FLAGS.order,",sparse_ness: ",FLAGS.sparse_ness,
+          ",laplacian_normalize: ",FLAGS.laplacian_normalize,",threshold",FLAGS.threshold,",wavelet_s:",FLAGS.wavelet_s,",mask:",FLAGS.mask,
+          ",normalize:",FLAGS.normalize,",weight_normalize:",FLAGS.weight_normalize," weight_share:",FLAGS.weight_share,
+          ",learning_rate:",FLAGS.learning_rate,",hidden1:",FLAGS.hidden1,",dropout:",FLAGS.dropout,",max_degree:",FLAGS.max_degree,",alldata:",FLAGS.alldata)
 
-    # Print results
-    print("Epoch:", '%04d' % (epoch + 1), "train_loss=", "{:.5f}".format(outs[1]),
-          "train_acc=", "{:.5f}".format(outs[2]), "val_loss=", "{:.5f}".format(cost),
-          "val_acc=", "{:.5f}".format(acc), "test_loss=", "{:.5f}".format(test_cost), "test_acc=", "{:.5f}".format(test_acc))
-
-    if epoch > FLAGS.early_stopping and cost_val[-1] > np.mean(cost_val[-(FLAGS.early_stopping+1):-1]):
-        print("Early stopping...")
-        break
-
-print("Optimization Finished!")
-
-print("dataset: ",FLAGS.dataset," model: ",FLAGS.model,"order: ",FLAGS.order,",sparse_ness: ",FLAGS.sparse_ness,
-      ",laplacian_normalize: ",FLAGS.laplacian_normalize,",threshold",FLAGS.threshold,",wavelet_s:",FLAGS.wavelet_s,",mask:",FLAGS.mask,
-      ",normalize:",FLAGS.normalize,",weight_normalize:",FLAGS.weight_normalize," weight_share:",FLAGS.weight_share,
-      ",learning_rate:",FLAGS.learning_rate,",hidden1:",FLAGS.hidden1,",dropout:",FLAGS.dropout,",max_degree:",FLAGS.max_degree,",alldata:",FLAGS.alldata)
-
-print("Val acc:", best_val_acc, " Test acc: ",output_test_acc)
+    print("Val accuracy:", best_val_acc, " Test accuracy: ",output_test_acc)
 
 print("********************************************************")
