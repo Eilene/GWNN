@@ -4,7 +4,7 @@
 ## Overview
 
 <div align=center>
- <img src="Wavelet_basis.jpeg" alt="Wavelet_basis" align=center/>
+ <img src="wavelet_basis.jpeg" alt="Wavelet_basis" align=center/>
 </div>
 
 > We provide a TensorFlow implementation of Graph Wavelet Neural Network, which implement graph convolution via graph wavelet transform instead of Fourier transform. Different from graph Fourier transform, graph wavelets are sparse and localized in vertex domain, offering high efficiency and good interpretability for graph convolution. We evaluate our model in the task of graph-based semi-supervised classification.
@@ -17,14 +17,14 @@ the script has been tested running under Python 2.7, with the following packages
 * networkx==2.0
 
 ## Run the code
-> cd GraphWaveletNetwork
-> python train.py
+* cd GraphWaveletNetwork
+* python train.py
 
 ## Parameters
-> --wavelet_s             FLOAT     wavelet scaling parameter           Cora: 1.0, Citeseer: 0.7, Pubmed: 0.5
-  --threshold             FLOAT     threshold parameter for wavelet     Cora: 1e-4, Citeseer: 1e-5, Pubmed: 1e-7
-  --epochs                INT       Number of Adam epochs.              Default is 1000.
-  --early-stopping        INT       Number of early stopping epochs.    Default is 100.
+* --wavelet_s                 FLOAT         wavelet scaling parameter                  Cora: 1.0, Citeseer: 0.7, Pubmed: 0.5
+* --threshold                 FLOAT         threshold parameter for wavelet            Cora: 1e-4, Citeseer: 1e-5, Pubmed: 1e-7
+* --epochs                    INT           Number of Adam epochs.                     Default is 1000.
+* --early-stopping            INT           Number of early stopping epochs.           Default is 100.
 
 ## Run Example
 The run example for Cora dataset in default parameter
